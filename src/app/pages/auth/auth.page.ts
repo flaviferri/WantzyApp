@@ -1,3 +1,4 @@
+import { Message } from './../../../../node_modules/esbuild-wasm/esm/browser.d';
 import { Component, inject, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { HeaderComponent } from "../../shared/components/header/header.component";
@@ -9,6 +10,7 @@ import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/models/userModel';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 
 @Component({
@@ -27,17 +29,41 @@ export class AuthPage implements OnInit {
   })
 
   firebaseSvc=inject(FirebaseService)
+  utilSvc= inject(UtilsService)
 
   ngOnInit() {
 
   }
 
-  submit(){
+  async submit(){
 
-this.firebaseSvc.signIn(this.form.value as User). then(res=>{
-  console.log(res)
-})
+    if(this.form.valid){
+
+      const loading = await this.utilSvc.loading();
+      await loading.present();
+
+    this.firebaseSvc.signIn(this.form.value as User). then(res=>{
+
+    console.log(res)
+
+    }).catch(error => {
+      console.log(error);
+
+      this.utilSvc.presentToast({
+        message: error.message,
+        duration: 2500,
+        color:'primary',
+        position:'middle',
+        icon:'alert-circle'
+
+      })
+
+    }).finally(() => {
+      loading.dismiss();
+
+    })
         }
+      }
 
 
 }
