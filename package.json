@@ -4,9 +4,9 @@
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "styles": [
-  "src/styles.scss",
-  "node_modules/@ionic/angular/css/ionic.bundle.css"
-],
+    "src/styles.scss",
+    "node_modules/@ionic/angular/css/ionic.bundle.css"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,6 +21,7 @@
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",
     "@angular/core": "^19.0.0",
+    "@angular/fire": "^18.0.1",
     "@angular/forms": "^19.0.0",
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
