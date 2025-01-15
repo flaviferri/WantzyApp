@@ -7,7 +7,7 @@
   <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
 
     <app-logo></app-logo>
-
+    <!--  ============ EMAIL =============-->
       <app-customs-input
       autoComplete="email"
       icon="mail-outline"
@@ -20,7 +20,7 @@
         <div *ngIf="form.controls.email.errors?.['required']">The email is required</div>
         <div *ngIf="form.controls.email.errors?.['email']">Write a valid email</div>
       </div>
-
+    <!--  ============ PASSWORD =============-->
       <app-customs-input
       [control]="form.controls.password"
       icon="lock-closed-outline"
