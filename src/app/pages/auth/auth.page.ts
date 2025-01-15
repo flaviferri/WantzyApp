@@ -8,6 +8,7 @@ import { LogoComponent } from "../../shared/components/logo/logo.component";
 import { RouterLink } from '@angular/router';
 
 import { User } from 'src/app/models/userModel';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class AuthPage implements OnInit {
 
   })
 
-/*  firebaseSvc=inject(FirebaseService) */
+  firebaseSvc=inject(FirebaseService)
 
   ngOnInit() {
 
@@ -33,9 +34,9 @@ export class AuthPage implements OnInit {
 
   submit(){
 
-/* this.firebaseSvc.signIn(this.form.value as User). then(res=>{
+this.firebaseSvc.signIn(this.form.value as User). then(res=>{
   console.log(res)
-}) */
+})
         }
 
 
