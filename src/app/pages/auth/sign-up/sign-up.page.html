@@ -20,7 +20,7 @@
     > </app-customs-input>
 
       <div class="validators" *ngIf="form.controls.name.errors && form.controls.name.touched">
-        <div *ngIf="form.controls.name.errors?.['required']">The email is required</div>
+        <div *ngIf="form.controls.name.errors?.['required']">The name is required</div>
         <div *ngIf="form.controls.name.errors?.['minLenght']">The name must be at least 4 characters</div>
       </div>
 

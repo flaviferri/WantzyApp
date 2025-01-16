@@ -1,0 +1,65 @@
+<app-header [isModal]="true" title ="Add Product"></app-header>
+<ion-content>
+
+  <form [formGroup]="form" class="ion-padding ion-text-center" (ngSubmit)="submit()" (keypress.enter)="submit()">
+
+      <!--  ============ NAME===============
+        -->
+
+
+      <app-customs-input
+      autoComplete="name"
+      [control]="form.controls.name"
+      type="text"
+      label="Name"
+    > </app-customs-input>
+
+      <div class="validators" *ngIf="form.controls.name.errors && form.controls.name.touched">
+        <div *ngIf="form.controls.name.errors?.['required']">This field is required
+        </div>
+        <div *ngIf="form.controls.name.errors?.['minLenght']">The name must be at least 4 characters</div>
+      </div>
+  <!--  ============ PRICE ===============
+        -->
+
+      <app-customs-input
+      [control]="form.controls.price"
+      type="number"
+      label="Price"
+    > </app-customs-input>
+
+    <div class="validators" *ngIf="form.controls.price.errors && form.controls.price.touched">
+      <div *ngIf="form.controls.price.errors?.['required']">This field is required
+      </div>
+      <div *ngIf="form.controls.price.errors?.['min']">The minimum price is 0</div>
+    </div>
+  <!--  ============ Sold Units ===============
+        -->
+
+        <app-customs-input
+        [control]="form.controls.soldUnits"
+        type="number"
+        label="Sold Units"
+      > </app-customs-input>
+
+      <div class="validators" *ngIf="form.controls.soldUnits.errors && form.controls.soldUnits.touched">
+        <div *ngIf="form.controls.soldUnits.errors?.['required']">This field is required
+        </div>
+        <div *ngIf="form.controls.soldUnits.errors?.['min']">The minimum quantity must be 0
+        </div>
+      </div>
+
+
+
+
+
+
+      <ion-button   mode="ios" class="ion-margin" [disabled]="form.invalid" type="submit" >
+      Add Product
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+
+
+
+  </form>
+</ion-content>

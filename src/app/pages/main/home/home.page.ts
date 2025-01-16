@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { AddUpdateProductComponent } from 'src/app/shared/components/add-update-product/add-update-product.component';
 import { HeaderComponent } from 'src/app/shared/components/header/header.component';
 
 @Component({
@@ -23,4 +24,12 @@ export class HomePage implements OnInit {
   signOut(){
     this.firebaseSvc.signOut();
   }
+
+    //======= Add or Update products ========
+addUpdateProduct(){
+  this.utilsSvc.presentModal({
+    component : AddUpdateProductComponent,
+    cssClass: 'add-update-modal'
+  })
+}
 }
