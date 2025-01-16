@@ -22,7 +22,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class AuthPage implements OnInit {
 
-  form = new FormGroup({
+    form = new FormGroup({
     email : new FormControl('',[Validators.required, Validators.email]),
     password : new FormControl('',[Validators.required])
 
@@ -65,7 +65,7 @@ export class AuthPage implements OnInit {
         }
       }
 
-      async getUserInfo(uid:string){
+    async getUserInfo(uid:string){
 
         if(this.form.valid){
 
