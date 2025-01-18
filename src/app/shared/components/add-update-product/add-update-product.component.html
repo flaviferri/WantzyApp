@@ -6,12 +6,21 @@
     (ngSubmit)="submit()"
     (keypress.enter)="submit()"
   >
+
+    <!--  ============ IF IMG EXISTS ===============
+        -->
     <ion-avatar *ngIf="form.value.image">
       <img [src]="form.value.image" />
     </ion-avatar>
 
-    <!--  ============ TAKE/SELECT A PIC ===============
-        -->
+<!--        ============ IF IMG NO EXISTS ===============
+ -->
+
+ <ion-icon class ="image-icon" *ngIf="!form.value.image" name ="image-outline"></ion-icon>
+<br>
+<!--       ============ TAKE/SELECT A PIC ===============
+ -->
+
     <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
       Take/Select
     </ion-button>
