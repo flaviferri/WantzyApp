@@ -1,42 +1,43 @@
 <app-header>title ="Inicio"</app-header>
 
-
 <ion-content>
+  <ion-list>
+    <ion-item-sliding class="product-item" *ngFor="let p of products">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img [src]="p.image" />
+        </ion-avatar>
+        <ion-label>
+          <div class="name">{{p.name}}</div>
+          <div class="data">
+            <strong>Price :</strong>{{p.price | currency : 'EUR'}} <br>
+            <strong>Sold Units :</strong> {{p.soldUnits}}
+          </div>
 
- <ion-list>
-  <ion-item-sliding class="product-item" *ngFor="let p of products">
-    <ion-item>
-      <ion-avatar>
-        <img [src]="p.image" />
-      </ion-avatar>
-      <ion-label>
-        <div class="name">
-    {{p.name}}
-        </div>
-      </ion-label>
-    </ion-item>
+          <ion-chip color="primary" mode="ios" outline="true">
+            <ion-label>Revenue: {{p.price * p.soldUnits | currency : 'EUR'}}</ion-label>
+          </ion-chip>
+        </ion-label>
+      </ion-item>
+      <!--   =================== OPTIONS =================00-->
+      <ion-item-options>
+        <!--   ============= Edit ============-->
+        <ion-item-option>
+          <ion-icon class="option-btn" name="create-outline"></ion-icon>
+        </ion-item-option>
+        <!--   ============= Delete ============-->
 
-    <ion-item-options >
-      <ion-item-option >
-        <ion-icon class="option-btn"  name="create-outline"></ion-icon>
-            </ion-item-option>
+        <ion-item-option color="danger">
+          <ion-icon class="option-btn" name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 
-            <ion-item-option color="danger">
-              <ion-icon class="option-btn"  name="trash-outline"></ion-icon>
-                  </ion-item-option>
-                </ion-item-options>
-
-
-
-  </ion-item-sliding>
- </ion-list>
-
-<!--   ============= NEW PRODUCT ============
+  <!--   ============= NEW PRODUCT ============
  --><ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button (click)="addUpdateProduct()">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
-
-
+    <ion-fab-button (click)="addUpdateProduct()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

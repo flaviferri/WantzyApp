@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -47,10 +48,11 @@ getProduct(){
 
 
     //======= Add or Update products ========
-addUpdateProduct(){
+addUpdateProduct(product?:Product){
   this.utilsSvc.presentModal({
     component : AddUpdateProductComponent,
-    cssClass: 'add-update-modal'
+    cssClass: 'add-update-modal',
+    componentProps:{ product }
   })
 }
 }

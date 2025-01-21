@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit,Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { HeaderComponent } from '../header/header.component';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { User } from 'src/app/models/userModel';
+import { Product } from '../../../models/product.model';
 
 @Component({
   selector: 'app-add-update-product',
@@ -31,6 +32,9 @@ import { User } from 'src/app/models/userModel';
   ],
 })
 export class AddUpdateProductComponent implements OnInit {
+
+  @Input() product : Product;
+
   form = new FormGroup({
     id: new FormControl(''),
     uid: new FormControl(''),

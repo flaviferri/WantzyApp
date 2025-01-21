@@ -6,12 +6,12 @@ export const environment = {
   production: false,
 
   firebaseConfig :{
-    apiKey: "AIzaSyDdNO_tgeaxDzw0e9TQisvNr0JtluTh9as",
-    authDomain: "product-wantzy-app.firebaseapp.com",
-    projectId: "product-wantzy-app",
-    storageBucket: "product-wantzy-app.firebasestorage.app",
-    messagingSenderId: "579974815663",
-    appId: "1:579974815663:web:4a50307bb0d645d727995a"
+    apiKey: process.env['REACT_APP_FIREBASE_API_KEY']!,
+    authDomain: process.env['REACT_APP_FIREBASE_AUTH_DOMAIN']!,
+    projectId: process.env['REACT_APP_FIREBASE_PROJECT_ID']!,
+    storageBucket: process.env['REACT_APP_FIREBASE_STORAGE_BUCKET']!,
+    messagingSenderId: process.env['REACT_APP_FIREBASE_MESSAGING_SENDER_ID']!,
+    appId: process.env['REACT_APP_FIREBASE_APP_ID']!,
   }
 };
 
