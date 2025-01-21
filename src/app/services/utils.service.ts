@@ -1,4 +1,3 @@
-import { options } from './../../../node_modules/fast-uri/types/index.d';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
