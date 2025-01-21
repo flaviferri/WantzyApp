@@ -31,7 +31,7 @@ import { User } from 'src/app/models/userModel';
   ],
 })
 export class AddUpdateProductComponent implements OnInit {
-    form = new FormGroup({
+  form = new FormGroup({
     id: new FormControl(''),
     uid: new FormControl(''),
     image: new FormControl('', [Validators.required]),
@@ -43,46 +43,40 @@ export class AddUpdateProductComponent implements OnInit {
   firebaseSvc = inject(FirebaseService);
   utilSvc = inject(UtilsService);
 
-  user={} as User;
+  user = {} as User;
 
   ngOnInit() {
-
     this.user = this.utilSvc.getFromLocalStorage('user');
   }
 
-/*   ======= TAKE / SELECT IMAGE ======
- */
+  /*   ======= TAKE / SELECT IMAGE ======
+   */
 
-async takeImage(){
-  const dataUrl = (await this.utilSvc.takePicture('Product image')).dataUrl;
-  this.form.controls.image.setValue(dataUrl)
-}
-
+  async takeImage() {
+    const dataUrl = (await this.utilSvc.takePicture('Product image')).dataUrl;
+    this.form.controls.image.setValue(dataUrl);
+  }
 
   async submit() {
     if (this.form.valid) {
-
-      let path = `users/${this.user.uid}/products`
+      let path = `users/${this.user.uid}/products`;
 
       const loading = await this.utilSvc.loading();
       await loading.present();
 
-/*   ======= upload image and get url ======
- */
-let dataUrl = this.form.value.image;
-let imagePath = `${this.user.uid}/${Date.now()}`;
-let imageUrl = await this.firebaseSvc.uploadImage(imagePath,dataUrl);
-this.form.controls.image.setValue(imageUrl);
+      /*   ======= upload image and get url ======
+       */
+      let dataUrl = this.form.value.image;
+      let imagePath = `${this.user.uid}/${Date.now()}`;
+      let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
+      this.form.controls.image.setValue(imageUrl);
 
-delete this.form.value.id;
-
-
+      delete this.form.value.id;
 
       this.firebaseSvc
-        .addDocument(path,this.form.value)
+        .addDocument(path, this.form.value)
         .then(async (res) => {
-
-          this.utilSvc.dismissModal({ success:true});
+          this.utilSvc.dismissModal({ success: true });
 
           this.utilSvc.presentToast({
             message: 'product created successfully',
@@ -91,8 +85,8 @@ delete this.form.value.id;
             position: 'middle',
             icon: 'checkmark-circle-outline',
           });
-
-          }) .catch((error) => {
+        })
+        .catch((error) => {
           console.log(error);
 
           this.utilSvc.presentToast({

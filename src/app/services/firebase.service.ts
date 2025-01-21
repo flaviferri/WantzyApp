@@ -17,6 +17,8 @@ import {
   getDoc,
   addDoc,
   collection,
+  collectionData,
+  query
 } from '@angular/fire/firestore';
 import { UtilsService } from './utils.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -79,6 +81,14 @@ export class FirebaseService {
 
   //================== DATABASE =========================
 
+  //====== Get collection data ==========
+
+  getCollectionData(path :string, collectionQuery?: any){
+const ref = collection(getFirestore(), path);
+return collectionData(query(ref,collectionQuery),{idField:'id'});
+  }
+
+
   //======SetDocument ==========
   setDocument(path: string, data: any) {
     return setDoc(doc(getFirestore(), path), data);
@@ -96,7 +106,10 @@ export class FirebaseService {
     return addDoc(collection(getFirestore(), path), data);
   }
 
-  //======STORAGE ==========
+  //====================STORAGE ===========================
+
+    //===== upload image ==========
+
 
   async uploadImage(path: string, data_url: string) {
     return uploadString(ref(getStorage(), path), data_url, 'data_url').then(
