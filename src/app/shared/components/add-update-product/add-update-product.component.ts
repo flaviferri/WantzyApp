@@ -27,8 +27,7 @@ import { Product } from '../../../models/product.model';
     CustomsInputComponent,
     ReactiveFormsModule,
     CommonModule,
-    LogoComponent,
-    RouterLink,
+
   ],
 })
 export class AddUpdateProductComponent implements OnInit {
@@ -39,9 +38,9 @@ export class AddUpdateProductComponent implements OnInit {
     id: new FormControl(''),
     uid: new FormControl(''),
     image: new FormControl('', [Validators.required]),
-    price: new FormControl('', [Validators.required, Validators.min(0)]),
+    price: new FormControl(null, [Validators.required, Validators.min(0)]),
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    soldUnits: new FormControl('', [Validators.required, Validators.min(0)]),
+    soldUnits: new FormControl(null, [Validators.required, Validators.min(0)]),
   });
 
   firebaseSvc = inject(FirebaseService);
@@ -51,6 +50,7 @@ export class AddUpdateProductComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.utilSvc.getFromLocalStorage('user');
+    if(this.product)this.form.setValue(this.product)
   }
 
   /*   ======= TAKE / SELECT IMAGE ======
@@ -61,14 +61,36 @@ export class AddUpdateProductComponent implements OnInit {
     this.form.controls.image.setValue(dataUrl);
   }
 
-  async submit() {
+  submit(){
     if (this.form.valid) {
+if(this.product) this.updateProduct();
+else this.createProduct();
+    }
+
+  }
+/*   ============== CHANGE FROM STRING TO NUMBER  ======================================
+   */
+
+setNumberInputs(){
+
+  let {soldUnits,price}= this.form.controls;
+
+  if(soldUnits.value) soldUnits.setValue(parseFloat(soldUnits.value));
+  if(price.value) price.setValue(parseFloat(price.value));
+
+
+}
+
+/*   ============== CREATE PRODUCT ======================================
+   */
+  async createProduct() {
+
       let path = `users/${this.user.uid}/products`;
 
       const loading = await this.utilSvc.loading();
       await loading.present();
 
-      /*   ======= upload image and get url ======
+      /*   ======= if the image change , upload image and get url ======
        */
       let dataUrl = this.form.value.image;
       let imagePath = `${this.user.uid}/${Date.now()}`;
@@ -78,12 +100,12 @@ export class AddUpdateProductComponent implements OnInit {
       delete this.form.value.id;
 
       this.firebaseSvc
-        .addDocument(path, this.form.value)
+        .updateDocument(path, this.form.value)
         .then(async (res) => {
           this.utilSvc.dismissModal({ success: true });
 
           this.utilSvc.presentToast({
-            message: 'product created successfully',
+            message: 'product updated successfully',
             duration: 1500,
             color: 'sucess',
             position: 'middle',
@@ -105,5 +127,59 @@ export class AddUpdateProductComponent implements OnInit {
           loading.dismiss();
         });
     }
+
+
+  /*   ============= UPDATE PRODUCT ====================
+   */
+
+  async updateProduct() {
+
+    let path = `users/${this.user.uid}/products/${this.product.id}`;
+
+    const loading = await this.utilSvc.loading();
+    await loading.present();
+
+    /*   ======= if the image change , upload image and get url ======
+     */
+
+    if(this.form.value.image !== this.product.image){
+      let dataUrl = this.form.value.image;
+      let imagePath = await this.firebaseSvc.getFilePath(this.product.image)
+      let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
+      this.form.controls.image.setValue(imageUrl);
+
+    }
+
+
+    delete this.form.value.id;
+
+    this.firebaseSvc
+      .updateDocument(path, this.form.value)
+      .then(async (res) => {
+        this.utilSvc.dismissModal({ success: true });
+
+        this.utilSvc.presentToast({
+          message: 'product updated successfully',
+          duration: 1500,
+          color: 'sucess',
+          position: 'middle',
+          icon: 'checkmark-circle-outline',
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+
+        this.utilSvc.presentToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle',
+        });
+      })
+      .finally(() => {
+        loading.dismiss();
+      });
   }
 }
+

@@ -18,7 +18,9 @@ import {
   addDoc,
   collection,
   collectionData,
-  query
+  query,
+  updateDoc,
+  deleteDoc
 } from '@angular/fire/firestore';
 import { UtilsService } from './utils.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -27,12 +29,17 @@ import {
   uploadString,
   ref,
   getDownloadURL,
+  deleteObject
 } from 'firebase/storage';
+import { getUrl } from '@ionic/angular/directives/navigation/stack-utils';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
+  generateId() {
+    throw new Error('Method not implemented.');
+  }
   auth = inject(AngularFireAuth);
   utilsSvc = inject(UtilsService);
   fireStorage = inject(AngularFirestore);
@@ -83,15 +90,24 @@ export class FirebaseService {
 
   //====== Get collection data ==========
 
-  getCollectionData(path :string, collectionQuery?: any){
-const ref = collection(getFirestore(), path);
-return collectionData(query(ref,collectionQuery),{idField:'id'});
+  getCollectionData(path: string, collectionQuery?: any) {
+    const ref = collection(getFirestore(), path);
+    return collectionData(query(ref, collectionQuery), { idField: 'id' });
   }
-
 
   //======SetDocument ==========
   setDocument(path: string, data: any) {
     return setDoc(doc(getFirestore(), path), data);
+  }
+
+  //======UpdateDocument ==========
+  updateDocument(path: string, data: any) {
+    return updateDoc(doc(getFirestore(), path), data);
+  }
+  //======DeleteDocument ==========
+
+  deleteDocument(path:string) {
+    return deleteDoc(doc(getFirestore(), path));
   }
 
   //======GetDocument ==========
@@ -108,8 +124,7 @@ return collectionData(query(ref,collectionQuery),{idField:'id'});
 
   //====================STORAGE ===========================
 
-    //===== upload image ==========
-
+  //===== upload image ==========
 
   async uploadImage(path: string, data_url: string) {
     return uploadString(ref(getStorage(), path), data_url, 'data_url').then(
@@ -118,4 +133,18 @@ return collectionData(query(ref,collectionQuery),{idField:'id'});
       }
     );
   }
+  //===== Get parth of image + url ==========
+
+  async getFilePath(url: string) {
+    return ref(getStorage(), url).fullPath;
+  }
+  //===== DELETE FILE ==========
+
+  deleteFile(path:string){
+return  deleteObject(ref(getStorage(), path))
+
+  }
+
+
+
 }

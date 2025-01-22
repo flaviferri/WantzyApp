@@ -1,7 +1,23 @@
-<app-header>title ="Inicio"</app-header>
+<app-header title="Inicio"></app-header>
 
 <ion-content>
-  <ion-list>
+<ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
+
+<ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center" *ngIf="!loading && products.length" >
+  <div>
+    <h5>{{products.length}}</h5>
+    <p>Products</p>
+  </div>
+  <div>
+    <h5>{{ getProfits() | currency : 'EUR'}}</h5>
+    <p>Revenue</p>
+  </div>
+
+</ion-card>
+  <!--   ============= Products ============-->
+  <ion-list *ngIf="!loading">
     <ion-item-sliding class="product-item" *ngFor="let p of products">
       <ion-item>
         <ion-avatar slot="start">
@@ -10,32 +26,49 @@
         <ion-label>
           <div class="name">{{p.name}}</div>
           <div class="data">
-            <strong>Price :</strong>{{p.price | currency : 'EUR'}} <br>
+            <strong>Price :</strong>{{p.price | currency : 'EUR'}} <br />
             <strong>Sold Units :</strong> {{p.soldUnits}}
           </div>
-
           <ion-chip color="primary" mode="ios" outline="true">
-            <ion-label>Revenue: {{p.price * p.soldUnits | currency : 'EUR'}}</ion-label>
+            <ion-label>
+              Revenue: {{p.price * p.soldUnits | currency : 'EUR'}}
+            </ion-label>
           </ion-chip>
         </ion-label>
       </ion-item>
-      <!--   =================== OPTIONS =================00-->
+      <!--   =================== OPTIONS =================-->
       <ion-item-options>
-        <!--   ============= Edit ============-->
-        <ion-item-option>
+        <ion-item-option (click)="addUpdateProduct(p)">
           <ion-icon class="option-btn" name="create-outline"></ion-icon>
         </ion-item-option>
-        <!--   ============= Delete ============-->
-
-        <ion-item-option color="danger">
+        <ion-item-option (click)="confirmDeleteProduct(p)" color="danger">
           <ion-icon class="option-btn" name="trash-outline"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 
-  <!--   ============= NEW PRODUCT ============
- --><ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <!--   ============= LOADING ============-->
+  <ion-list *ngIf="loading">
+    <ion-item class="product-item" *ngFor="let p of [1,1,1,1,1,1,1]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated style="width: 100%; height: 100%;"></ion-skeleton-text>
+      </ion-avatar>
+      <div>
+        <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+      </div>
+    </ion-item>
+  <!--   ============= withaout product available  ============-->
+
+    <div *ngIf="!loading && !products.length" class="empty">
+      <ion-icon name="shield-outline"></ion-icon>
+      <h3>There are not available products</h3>
+    </div>
+  </ion-list>
+
+  <!--   ============= NEW PRODUCT ============-->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addUpdateProduct()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
