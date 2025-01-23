@@ -1,8 +1,7 @@
-ion-content {
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
+.custom-bg {
+  --background: var(--ion-color-primary);
+  color: var(--ion-color-light); /* Asegúrate de que el contenido sea legible */
 }
-
 ion-item {
   font-size: 14px ;
   color: var(--ion-color-light);
@@ -31,11 +30,7 @@ ion-footer {
   z-index: 1000;
   padding: 10px;
 }
-ion-content{
-  background-color: #0881fb;
 
-
-}
 
 ion-footer {
   background-color: #0068d1be;  /* Fondo blanco para que el contenido sea visible */

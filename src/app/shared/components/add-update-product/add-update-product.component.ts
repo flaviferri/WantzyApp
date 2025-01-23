@@ -1,4 +1,4 @@
-import { Component, inject, OnInit,Input } from '@angular/core';
+import { Component, inject, OnInit, Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { HeaderComponent } from '../header/header.component';
 import { CommonModule } from '@angular/common';
@@ -27,12 +27,11 @@ import { Product } from '../../../models/product.model';
     CustomsInputComponent,
     ReactiveFormsModule,
     CommonModule,
-
   ],
 })
 export class AddUpdateProductComponent implements OnInit {
 
-  @Input() product : Product;
+  @Input() product: Product;
 
   form = new FormGroup({
     id: new FormControl(''),
@@ -50,136 +49,112 @@ export class AddUpdateProductComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.utilSvc.getFromLocalStorage('user');
-    if(this.product)this.form.setValue(this.product)
+    if (this.product) this.form.setValue(this.product);
   }
 
-  /*   ======= TAKE / SELECT IMAGE ======
-   */
-
+  /*   ======= TAKE / SELECT IMAGE ====== */
   async takeImage() {
     const dataUrl = (await this.utilSvc.takePicture('Product image')).dataUrl;
     this.form.controls.image.setValue(dataUrl);
   }
 
-  submit(){
+  submit() {
     if (this.form.valid) {
-if(this.product) this.updateProduct();
-else this.createProduct();
+      if (this.product) this.updateProduct();
+      else this.createProduct();
     }
-
   }
-/*   ============== CHANGE FROM STRING TO NUMBER  ======================================
-   */
 
-setNumberInputs(){
+  /*   ============== CHANGE FROM STRING TO NUMBER  ====================================== */
+  setNumberInputs() {
+    let { soldUnits, price } = this.form.controls;
 
-  let {soldUnits,price}= this.form.controls;
+    if (soldUnits.value) soldUnits.setValue(parseFloat(soldUnits.value));
+    if (price.value) price.setValue(parseFloat(price.value));
+  }
 
-  if(soldUnits.value) soldUnits.setValue(parseFloat(soldUnits.value));
-  if(price.value) price.setValue(parseFloat(price.value));
-
-
-}
-
-/*   ============== CREATE PRODUCT ======================================
-   */
+  /*   ============== CREATE PRODUCT ====================================== */
   async createProduct() {
-
-      let path = `users/${this.user.uid}/products`;
-
-      const loading = await this.utilSvc.loading();
-      await loading.present();
-
-      /*   ======= if the image change , upload image and get url ======
-       */
-      let dataUrl = this.form.value.image;
-      let imagePath = `${this.user.uid}/${Date.now()}`;
-      let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
-      this.form.controls.image.setValue(imageUrl);
-
-      delete this.form.value.id;
-
-      this.firebaseSvc
-        .updateDocument(path, this.form.value)
-        .then(async (res) => {
-          this.utilSvc.dismissModal({ success: true });
-
-          this.utilSvc.presentToast({
-            message: 'product updated successfully',
-            duration: 1500,
-            color: 'sucess',
-            position: 'middle',
-            icon: 'checkmark-circle-outline',
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-
-          this.utilSvc.presentToast({
-            message: error.message,
-            duration: 2500,
-            color: 'primary',
-            position: 'middle',
-            icon: 'alert-circle',
-          });
-        })
-        .finally(() => {
-          loading.dismiss();
-        });
-    }
-
-
-  /*   ============= UPDATE PRODUCT ====================
-   */
-
-  async updateProduct() {
-
-    let path = `users/${this.user.uid}/products/${this.product.id}`;
+    const path = `users/${this.user.uid}/products`;
 
     const loading = await this.utilSvc.loading();
     await loading.present();
 
-    /*   ======= if the image change , upload image and get url ======
-     */
-
-    if(this.form.value.image !== this.product.image){
-      let dataUrl = this.form.value.image;
-      let imagePath = await this.firebaseSvc.getFilePath(this.product.image)
-      let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
-      this.form.controls.image.setValue(imageUrl);
-
-    }
-
+    let dataUrl = this.form.value.image;
+    let imagePath = `${this.user.uid}/${Date.now()}`;
+    let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
+    this.form.controls.image.setValue(imageUrl);
 
     delete this.form.value.id;
 
-    this.firebaseSvc
-      .updateDocument(path, this.form.value)
-      .then(async (res) => {
-        this.utilSvc.dismissModal({ success: true });
+    try {
+      // Usa addDocument para crear un nuevo producto en la colección
+      await this.firebaseSvc.addDocument(path, this.form.value);
 
-        this.utilSvc.presentToast({
-          message: 'product updated successfully',
-          duration: 1500,
-          color: 'sucess',
-          position: 'middle',
-          icon: 'checkmark-circle-outline',
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+      this.utilSvc.dismissModal({ success: true });
 
-        this.utilSvc.presentToast({
-          message: error.message,
-          duration: 2500,
-          color: 'primary',
-          position: 'middle',
-          icon: 'alert-circle',
-        });
-      })
-      .finally(() => {
-        loading.dismiss();
+      this.utilSvc.presentToast({
+        message: 'Product created successfully',
+        duration: 1500,
+        color: 'success',  // Corregido 'sucess' por 'success'
+        position: 'middle',
+        icon: 'checkmark-circle-outline',
       });
+    } catch (error) {
+      console.log(error);
+
+      this.utilSvc.presentToast({
+        message: error.message || 'An error occurred while creating the product.',
+        duration: 2500,
+        color: 'primary',
+        position: 'middle',
+        icon: 'alert-circle',
+      });
+    } finally {
+      loading.dismiss();
+    }
+  }
+
+  /*   ============= UPDATE PRODUCT ==================== */
+  async updateProduct() {
+    const path = `users/${this.user.uid}/products/${this.product.id}`;
+
+    const loading = await this.utilSvc.loading();
+    await loading.present();
+
+    if (this.form.value.image !== this.product.image) {
+      let dataUrl = this.form.value.image;
+      let imagePath = await this.firebaseSvc.getFilePath(this.product.image);
+      let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
+      this.form.controls.image.setValue(imageUrl);
+    }
+
+    delete this.form.value.id;
+
+    try {
+      await this.firebaseSvc.updateDocument(path, this.form.value);
+
+      this.utilSvc.dismissModal({ success: true });
+
+      this.utilSvc.presentToast({
+        message: 'Product updated successfully',
+        duration: 1500,
+        color: 'success',  // Corregido 'sucess' por 'success'
+        position: 'middle',
+        icon: 'checkmark-circle-outline',
+      });
+    } catch (error) {
+      console.log(error);
+
+      this.utilSvc.presentToast({
+        message: error.message,
+        duration: 2500,
+        color: 'primary',
+        position: 'middle',
+        icon: 'alert-circle',
+      });
+    } finally {
+      loading.dismiss();
+    }
   }
 }
-

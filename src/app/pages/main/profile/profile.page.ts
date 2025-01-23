@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -11,7 +12,7 @@ import { HeaderComponent } from 'src/app/shared/components/header/header.compone
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone:true,
-  imports: [IonicModule, HeaderComponent, RouterLink]
+  imports: [IonicModule, HeaderComponent,CommonModule]
 })
 export class ProfilePage implements OnInit {
 
