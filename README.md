@@ -1,7 +1,7 @@
 # WantzyApp
 
 ## Overview
-WantzyApp is a mobile application that allows users to manage their profiles, upload profile photos, and search for items of interest. It integrates with Firebase for authentication and data management.
+WantzyApp is an e-commerce mobile application that allows users to manage items in inventory, track the quantity of each item, and calculate total revenue. It integrates with Firebase for authentication and data management.
 
 ## Features
 - **Profile Management**: Users can create and edit their profile with details like name, email, and profile picture.
