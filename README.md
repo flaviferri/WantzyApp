@@ -23,6 +23,10 @@ WantzyApp is an e-commerce mobile application that allows users to manage items 
 3. **Item Search**: Users can search for items and save up to 4 results as favorites.
 4. **Terms and Conditions**: Users can access the app’s terms and conditions from their profile.
 
+## Example
+
+![https://s6.ezgif.com/tmp/ezgif-6413521690566.gif](https://s6.ezgif.com/tmp/ezgif-6413521690566.gif)
+
 ## Prerequisites
 - **Node.js** (version 14 or higher)
 - **npm** (Node package manager)
